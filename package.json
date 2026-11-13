@@ -1,0 +1,29 @@
+{
+  "name": "gym-os-final",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "node backend/index.js",
+    "dev": "node --watch backend/index.js",
+    "db:iniciar": "node backend/config/inicializar.js",
+    "build": "npm run build --prefix client",
+    "admin:crear": "node backend/config/crear-admin.js",
+    "db:actualizar-login": "node backend/config/actualizar-login.js"
+  },
+  "dependencies": {
+    "bcrypt": "6.0.0",
+    "cookie-parser": "1.4.7",
+    "dotenv": "17.4.2",
+    "express": "5.2.1",
+    "jsonwebtoken": "9.0.2",
+    "mysql2": "3.24.2",
+    "nodemailer": "^10.2.1",
+    "sequelize": "6.37.8"
+  },
+  "overrides": {
+    "sequelize": {
+      "uuid": "11.1.1"
+    }
+  }
+}
