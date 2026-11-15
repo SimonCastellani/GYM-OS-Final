@@ -245,26 +245,30 @@ async function crearRoles(req, res) {
     if (!permisosValidos.includes(permisos[i]))
       return res.status(400).json({ message: "Permiso inválido." });
   try {
-    let rol;
-    if (req.params.id) {
-      rol = await Rol.findByPk(req.params.id);
-      if (!rol) return res.status(404).json({ message: "Rol no encontrado." });
-      if (rol.sistema)
-        return res
-          .status(409)
-          .json({ message: "Los roles del sistema están protegidos." });
-      await rol.update({ nombre: nombre.trim(), descripcion, permisos });
-    } else {
-      rol = await Rol.create({
-        nombre: nombre.trim(),
-        descripcion,
-        permisos,
-        fecha_creacion: new Date(),
-      });
-    }
-    let codigo = 201;
-    if (req.params.id) codigo = 200;
-    res.status(codigo).json(rol);
+    const resultado = await sequelize.transaction(async (transaction) => {
+      let rol;
+      if (req.params.id) {
+        rol = await Rol.findByPk(req.params.id, {
+          transaction,
+          lock: transaction.LOCK.UPDATE,
+        });
+        if (!rol) return { codigo: 404, data: { message: "Rol no encontrado." } };
+        if (rol.sistema)
+          return { codigo: 409, data: { message: "Los roles del sistema están protegidos." } };
+        await rol.update({ nombre: nombre.trim(), descripcion, permisos }, { transaction });
+      } else {
+        rol = await Rol.create({
+          nombre: nombre.trim(),
+          descripcion,
+          permisos,
+          fecha_creacion: new Date(),
+        }, { transaction });
+      }
+      const accion = req.params.id ? "CU035_EDITAR_ROL" : "CU033_CREAR_ROL";
+      await registrarEvento(req.user.id, accion, "administracion", transaction);
+      return { codigo: req.params.id ? 200 : 201, data: rol };
+    });
+    res.status(resultado.codigo).json(resultado.data);
   } catch (error) {
     res
       .status(409)
@@ -361,6 +365,7 @@ async function eliminarRol(req, res) {
         });
     }
     await rol.destroy({ transaction });
+    await registrarEvento(req.user.id, "CU036_ELIMINAR_ROL", "administracion", transaction);
     await transaction.commit();
     res.status(204).end();
   } catch (error) {

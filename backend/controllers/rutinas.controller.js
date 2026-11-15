@@ -1,4 +1,5 @@
 const { Op } = require("sequelize");
+const { registrarEvento } = require("./bitacora.controller");
 const { sequelize } = require("../config/db");
 const {
   Rutina,
@@ -151,6 +152,7 @@ async function guardarRutina(
   rutina,
   transaction,
 ) {
+  const edicion = Boolean(rutina);
   if (rutina) {
     await rutina.update(datos, {
       transaction,
@@ -172,6 +174,10 @@ async function guardarRutina(
     );
   }
   await actualizarRutinaEjercicio(rutina.id, ejercicios, transaction);
+  const accion = datos.tipo_generacion === "ia"
+    ? (edicion ? "CU019_ADAPTAR_RUTINA" : "CU015_GENERAR_RUTINA")
+    : (edicion ? "CU018_EDITAR_RUTINA" : "CU016_CREAR_RUTINA");
+  await registrarEvento(usuario_id, accion, "rutinas", transaction);
   return rutina;
 }
 async function listarRutinas(req, res) {
@@ -353,9 +359,12 @@ async function eliminarRutina(req, res) {
         message: "Terminá primero el entrenamiento en curso.",
       });
     }
-    await rutina.update({
-      estado: "eliminada",
-      fecha_actualizacion: new Date(),
+    await sequelize.transaction(async (transaction) => {
+      await rutina.update({
+        estado: "eliminada",
+        fecha_actualizacion: new Date(),
+      }, { transaction });
+      await registrarEvento(req.user.id, "CU020_ELIMINAR_RUTINA", "rutinas", transaction);
     });
     res.status(204).end();
   } catch (error) {

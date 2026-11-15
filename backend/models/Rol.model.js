@@ -10,7 +10,6 @@ const Rol = sequelize.define(
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    dvh: { type: DataTypes.STRING(64), allowNull: false, defaultValue: "" },
     nombre: { type: DataTypes.STRING(50), allowNull: false, unique: true },
     descripcion: { type: DataTypes.STRING(255), allowNull: true },
     fecha_creacion: { type: DataTypes.DATE(3), allowNull: false },

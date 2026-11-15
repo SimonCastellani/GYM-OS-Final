@@ -10,7 +10,6 @@ const UsuarioRol = sequelize.define(
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    dvh: { type: DataTypes.STRING(64), allowNull: false, defaultValue: "" },
     usuario_id: { type: DataTypes.UUID, allowNull: false },
     rol_id: { type: DataTypes.UUID, allowNull: false },
     fecha_asignacion: { type: DataTypes.DATE(3), allowNull: false },

@@ -1,3 +1,4 @@
+const { registrarEvento } = require("./bitacora.controller");
 const { Op } = require("sequelize");
 const { sequelize } = require("../config/db");
 const {
@@ -99,6 +100,14 @@ function datosComida(comida) {
   datos.tipo_comida = comida.tipo_comida;
   return datos;
 }
+function claveComida(comida) {
+  const alimentos = comida.alimentos.map((a) => JSON.stringify([
+    a.nombre.toLowerCase(), a.cantidad, a.unidad, a.calorias,
+    a.proteinas_g, a.carbohidratos_g, a.grasas_g,
+  ])).sort();
+  return JSON.stringify([comida.nombre_comida.toLowerCase(), comida.tipo_comida, alimentos]);
+}
+
 async function actualizarComida(dieta_id, comida, transaction) {
   const datos = datosComida(comida);
   if (
@@ -199,16 +208,21 @@ async function actualizarDieta(req, res) {
         message: "Las calorías objetivo deben ser enteras.",
       });
     }
+    const comidasIngresadas = new Set();
     try {
       for (let indice5 = 0; indice5 < comidas.length; indice5++) {
         const comida = comidas[indice5];
-        datosComida(comida);
+        const datos = datosComida(comida);
         if (
           typeof comida.hora !== "string" ||
           !/^([01]\d|2[0-3]):[0-5]\d$/.test(comida.hora)
         ) {
           throw new Error("Revisá los horarios.");
         }
+        const clave = comida.hora + "|" + claveComida(datos);
+        if (comidasIngresadas.has(clave))
+          return res.status(409).json({ message: "Ya agregaste esa comida en ese horario." });
+        comidasIngresadas.add(clave);
       }
     } catch (error) {
       return res.status(400).json({
@@ -249,6 +263,7 @@ async function actualizarDieta(req, res) {
         });
       }
     }
+    const edicion = Boolean(dieta);
     const transaction = await sequelize.transaction();
     try {
       if (req.generacionIA) {
@@ -319,6 +334,10 @@ async function actualizarDieta(req, res) {
         const comida = comidas[indice6];
         await actualizarComida(dieta.id, comida, transaction);
       }
+      const accion = req.generacionIA
+        ? (edicion ? "CU026_ADAPTAR_DIETA" : "CU023_GENERAR_DIETA")
+        : (edicion ? "CU027_EDITAR_DIETA" : "CU024_CREAR_DIETA");
+      await registrarEvento(req.user.id, accion, "nutricion", transaction);
       await transaction.commit();
     } catch (errorGuardado) {
       await transaction.rollback();
@@ -356,9 +375,12 @@ async function eliminarDieta(req, res) {
         message: "Dieta no encontrada.",
       });
     }
-    await dieta.update({
-      estado: "eliminada",
-      fecha_actualizacion: new Date(),
+    await sequelize.transaction(async (transaction) => {
+      await dieta.update({
+        estado: "eliminada",
+        fecha_actualizacion: new Date(),
+      }, { transaction });
+      await registrarEvento(req.user.id, "CU028_ELIMINAR_DIETA", "nutricion", transaction);
     });
     res.status(204).end();
   } catch (error) {
@@ -400,31 +422,41 @@ async function registrarComida(req, res) {
       grasas_totales_g: datos.grasas_g,
       alimentos: datos.alimentos,
     };
-    let comida;
-    if (req.params.id) {
-      comida = await ComidaConsumida.findOne({
-        where: {
-          id: req.params.id,
-          usuario_id: req.user.id,
-        },
-      });
-      if (!comida) {
-        return res.status(404).json({
-          message: "Consumo no encontrado.",
+    const resultado = await sequelize.transaction(async (transaction) => {
+      // Serializa altas y ediciones de la misma cuenta, incluso si llegan juntas.
+      await Usuario.findByPk(req.user.id, { transaction, lock: transaction.LOCK.UPDATE });
+      const usuario_id = req.user.id;
+      let comida;
+      if (req.params.id) {
+        comida = await ComidaConsumida.findOne({
+          where: { id: req.params.id, usuario_id },
+          transaction,
         });
+        if (!comida) return { estado: 404, data: { message: "Consumo no encontrado." } };
       }
-      await comida.update(campos);
-    } else {
-      campos.usuario_id = req.user.id;
-      comida = await ComidaConsumida.create(campos);
-    }
-    let codigoRespuesta2;
-    if (req.params.id) {
-      codigoRespuesta2 = 200;
-    } else {
-      codigoRespuesta2 = 201;
-    }
-    res.status(codigoRespuesta2).json(comida);
+      const inicio = Math.floor(fecha.getTime() / 60000) * 60000;
+      const cercanas = await ComidaConsumida.findAll({
+        where: {
+          usuario_id,
+          tipo_comida: datos.tipo_comida,
+          fecha_consumo: { [Op.gte]: new Date(inicio), [Op.lt]: new Date(inicio + 60000) },
+          ...(comida ? { id: { [Op.ne]: comida.id } } : {}),
+        },
+        transaction,
+      });
+      const clave = claveComida(datos);
+      if (cercanas.some((fila) => claveComida(fila) === clave)) {
+        return { estado: 409, data: { message: "Ya registraste esa comida en ese horario." } };
+      }
+      if (comida) {
+        await comida.update(campos, { transaction });
+      } else {
+        comida = await ComidaConsumida.create({ ...campos, usuario_id }, { transaction });
+      }
+      await registrarEvento(usuario_id, req.params.id ? "EDITAR_CONSUMO" : "CU040_AGREGAR_COMIDA", "nutricion", transaction);
+      return { estado: req.params.id ? 200 : 201, data: comida };
+    });
+    res.status(resultado.estado).json(resultado.data);
   } catch (error) {
     res.status(500).json({
       message: "No se pudo guardar el consumo.",
@@ -487,6 +519,7 @@ async function verMacros(req, res) {
         ["fecha_creacion", "DESC"],
       ],
     });
+    await registrarEvento(req.user.id, "CU030_CONSULTAR_MACROS", "nutricion");
     res.json({
       fecha,
       items,

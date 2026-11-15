@@ -10,7 +10,6 @@ const Mensaje = sequelize.define(
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    dvh: { type: DataTypes.STRING(64), allowNull: false, defaultValue: "" },
     conversacion_id: { type: DataTypes.UUID, allowNull: false },
     rol: {
       type: DataTypes.ENUM("user", "assistant"),

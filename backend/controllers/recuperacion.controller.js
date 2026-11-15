@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const { registrarEvento } = require("./bitacora.controller");
 const { sequelize } = require("../config/db");
 const { Usuario, Sesion, Recuperacion } = require("../models");
 const {
@@ -125,6 +126,7 @@ async function restablecerPassword(req, res) {
     );
     await Sesion.destroy({ where: { usuario_id: usuario.id }, transaction });
     await recuperacion.destroy({ transaction });
+    await registrarEvento(usuario.id, "CU004_RECUPERAR_PASSWORD", "cuentas", transaction);
     await transaction.commit();
     res.clearCookie("gymos100", { path: "/", httpOnly: true, sameSite: "lax" });
     res.json({

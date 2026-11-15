@@ -102,6 +102,11 @@ export default function Progreso({ usuario }) {
                       />
                     </LineChart>
                   </ResponsiveContainer>
+                  <p className="muted">
+                    Inicio: {puntosMediciones[0].peso} kg ({puntosMediciones[0].fecha})
+                    {" · "}
+                    Actual: {puntosMediciones.at(-1).peso} kg ({puntosMediciones.at(-1).fecha})
+                  </p>
                 </div>
               ) : (
                 <div className="vacio">

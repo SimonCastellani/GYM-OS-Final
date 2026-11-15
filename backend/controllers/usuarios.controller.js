@@ -269,11 +269,15 @@ async function cerrarSesion(req, res) {
         message: "Confirmá el cierre de sesión.",
       });
     }
-    await Sesion.destroy({
-      where: {
-        usuario_id: req.user.id,
-        token_hash: hashToken(req.cookies.gymos100),
-      },
+    await sequelize.transaction(async (transaction) => {
+      await Sesion.destroy({
+        where: {
+          usuario_id: req.user.id,
+          token_hash: hashToken(req.cookies.gymos100),
+        },
+        transaction,
+      });
+      await registrarEvento(req.user.id, "CU003_LOGOUT", "cuentas", transaction);
     });
     res.clearCookie("gymos100", {
       path: "/",

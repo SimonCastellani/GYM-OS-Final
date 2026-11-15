@@ -10,7 +10,6 @@ const EntrenamientoEjercicio = sequelize.define(
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    dvh: { type: DataTypes.STRING(64), allowNull: false, defaultValue: "" },
     entrenamiento_id: { type: DataTypes.UUID, allowNull: false },
     nombre_ejercicio: { type: DataTypes.STRING(150), allowNull: false },
     ejercicio_id: { type: DataTypes.STRING(40), allowNull: true },

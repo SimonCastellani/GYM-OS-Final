@@ -1,3 +1,4 @@
+const { registrarEvento } = require("./bitacora.controller");
 const { sequelize } = require("../config/db");
 const {
   Rutina,
@@ -277,6 +278,9 @@ async function actualizarRegistro(req, res) {
           transaction,
         },
       );
+      if (estado !== "iniciado") {
+        await registrarEvento(req.user.id, "CU021_CERRAR_ENTRENAMIENTO", "entrenamientos", transaction);
+      }
       await transaction.commit();
     } catch (errorGuardado) {
       await transaction.rollback();

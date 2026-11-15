@@ -10,7 +10,6 @@ const Bitacora = sequelize.define(
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    dvh: { type: DataTypes.STRING(64), allowNull: false, defaultValue: "" },
     usuario_id: { type: DataTypes.UUID, allowNull: true },
     accion: { type: DataTypes.STRING(100), allowNull: false },
     modulo: { type: DataTypes.STRING(100), allowNull: false },

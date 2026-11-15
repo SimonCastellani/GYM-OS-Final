@@ -10,6 +10,7 @@ export default function Entrenamientos() {
   const [aviso, setAviso] = useState("");
   const [confirmacion, setConfirmacion] = useState(null);
   const [ocupado, setOcupado] = useState(false);
+  const [fechaHistorial, setFechaHistorial] = useState("");
   async function cargar() {
     try {
       const r = await axios.get("/entrenamientos");
@@ -289,10 +290,29 @@ export default function Entrenamientos() {
         </form>
       )}
       <h2>Tu historial</h2>
-      {!items.length && (
+      {entrenamientosAnteriores.length ? (
+        <div className="acciones">
+          <label>
+            Filtrar por fecha
+            <input
+              type="date"
+              value={fechaHistorial}
+              onChange={(evento) => setFechaHistorial(evento.target.value)}
+            />
+          </label>
+          {fechaHistorial && (
+            <button type="button" onClick={() => setFechaHistorial("")}>
+              Ver todas las fechas
+            </button>
+          )}
+        </div>
+      ) : (
         <p className="vacio">Todavía no registraste entrenamientos.</p>
       )}
-      {entrenamientosAnteriores.map((e) => (
+      {fechaHistorial && !entrenamientosAnteriores.some((e) => e.fecha === fechaHistorial) && (
+        <p className="vacio">No hay entrenamientos en esa fecha.</p>
+      )}
+      {entrenamientosAnteriores.filter((e) => !fechaHistorial || e.fecha === fechaHistorial).map((e) => (
         <article className="tarjeta" key={e.id}>
           <span className="badge">{e.estado}</span>
           <h3>

@@ -14,13 +14,13 @@ DROP TABLE IF EXISTS `bitacora`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `bitacora` (
   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `dvh` varchar(64) NOT NULL DEFAULT '',
   `usuario_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   `accion` varchar(100) NOT NULL,
   `modulo` varchar(100) NOT NULL,
   `descripcion` text,
   `fecha_hora` datetime(3) NOT NULL,
   `resultado` enum('exitoso','fallido','advertencia') NOT NULL DEFAULT 'exitoso',
+  `dvh` char(64) GENERATED ALWAYS AS (SHA2(CAST(JSON_ARRAY(`accion`, `descripcion`, `fecha_hora`, `id`, `modulo`, `resultado`, `usuario_id`) AS CHAR), 256)) VIRTUAL,
   PRIMARY KEY (`id`),
   KEY `usuario_id` (`usuario_id`),
   CONSTRAINT `bitacora_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
@@ -31,7 +31,6 @@ DROP TABLE IF EXISTS `comidas_consumidas`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `comidas_consumidas` (
   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `dvh` varchar(64) NOT NULL DEFAULT '',
   `usuario_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `nombre_comida` varchar(150) NOT NULL,
   `tipo_comida` varchar(50) DEFAULT NULL,
@@ -43,6 +42,7 @@ CREATE TABLE `comidas_consumidas` (
   `carbohidratos_totales_g` decimal(6,2) DEFAULT NULL,
   `grasas_totales_g` decimal(6,2) DEFAULT NULL,
   `alimentos` json NOT NULL,
+  `dvh` char(64) GENERATED ALWAYS AS (SHA2(CAST(JSON_ARRAY(`alimentos`, `calorias_totales`, `cantidad_consumida`, `carbohidratos_totales_g`, `fecha_consumo`, `grasas_totales_g`, `id`, `nombre_comida`, `proteinas_totales_g`, `tipo_comida`, `unidad`, `usuario_id`) AS CHAR), 256)) VIRTUAL,
   PRIMARY KEY (`id`),
   KEY `usuario_id` (`usuario_id`),
   CONSTRAINT `comidas_consumidas_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -53,11 +53,11 @@ DROP TABLE IF EXISTS `conversaciones`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `conversaciones` (
   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `dvh` varchar(64) NOT NULL DEFAULT '',
   `usuario_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `modo` enum('entrenador','soporte') NOT NULL DEFAULT 'entrenador',
   `titulo` varchar(100) DEFAULT NULL,
   `fecha_creacion` datetime(3) NOT NULL,
+  `dvh` char(64) GENERATED ALWAYS AS (SHA2(CAST(JSON_ARRAY(`fecha_creacion`, `id`, `modo`, `titulo`, `usuario_id`) AS CHAR), 256)) VIRTUAL,
   PRIMARY KEY (`id`),
   KEY `usuario_id` (`usuario_id`),
   CONSTRAINT `conversaciones_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -68,7 +68,6 @@ DROP TABLE IF EXISTS `dieta_comidas`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dieta_comidas` (
   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `dvh` varchar(64) NOT NULL DEFAULT '',
   `dieta_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `nombre_comida` varchar(150) NOT NULL,
   `tipo_comida` varchar(50) DEFAULT NULL,
@@ -81,6 +80,7 @@ CREATE TABLE `dieta_comidas` (
   `grasas_g` decimal(6,2) DEFAULT NULL,
   `alimentos` json NOT NULL,
   `observaciones` text,
+  `dvh` char(64) GENERATED ALWAYS AS (SHA2(CAST(JSON_ARRAY(`alimentos`, `calorias`, `cantidad`, `carbohidratos_g`, `dieta_id`, `grasas_g`, `hora`, `id`, `nombre_comida`, `observaciones`, `proteinas_g`, `tipo_comida`, `unidad`) AS CHAR), 256)) VIRTUAL,
   PRIMARY KEY (`id`),
   KEY `dieta_id` (`dieta_id`),
   CONSTRAINT `dieta_comidas_ibfk_1` FOREIGN KEY (`dieta_id`) REFERENCES `dietas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -91,7 +91,6 @@ DROP TABLE IF EXISTS `dietas`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dietas` (
   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `dvh` varchar(64) NOT NULL DEFAULT '',
   `usuario_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `objetivo_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   `nombre` varchar(100) NOT NULL,
@@ -104,6 +103,7 @@ CREATE TABLE `dietas` (
   `estado` enum('activa','eliminada','finalizada') NOT NULL DEFAULT 'activa',
   `fecha_creacion` datetime(3) NOT NULL,
   `fecha_actualizacion` datetime(3) DEFAULT NULL,
+  `dvh` char(64) GENERATED ALWAYS AS (SHA2(CAST(JSON_ARRAY(`calorias_objetivo`, `carbohidratos_objetivo_g`, `descripcion`, `estado`, `fecha_actualizacion`, `fecha_creacion`, `grasas_objetivo_g`, `id`, `nombre`, `objetivo_id`, `proteinas_objetivo_g`, `tipo_generacion`, `usuario_id`) AS CHAR), 256)) VIRTUAL,
   PRIMARY KEY (`id`),
   KEY `usuario_id` (`usuario_id`),
   KEY `objetivo_id` (`objetivo_id`),
@@ -116,7 +116,6 @@ DROP TABLE IF EXISTS `entrenamiento_ejercicios`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `entrenamiento_ejercicios` (
   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `dvh` varchar(64) NOT NULL DEFAULT '',
   `entrenamiento_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `nombre_ejercicio` varchar(150) NOT NULL,
   `ejercicio_id` varchar(40) DEFAULT NULL,
@@ -126,6 +125,7 @@ CREATE TABLE `entrenamiento_ejercicios` (
   `peso_utilizado_kg` decimal(6,2) DEFAULT NULL,
   `realizado` tinyint(1) NOT NULL DEFAULT '0',
   `observaciones` text,
+  `dvh` char(64) GENERATED ALWAYS AS (SHA2(CAST(JSON_ARRAY(`ejercicio_id`, `entrenamiento_id`, `id`, `nombre_ejercicio`, `observaciones`, `orden`, `peso_utilizado_kg`, `realizado`, `repeticiones`, `series`) AS CHAR), 256)) VIRTUAL,
   PRIMARY KEY (`id`),
   KEY `entrenamiento_id` (`entrenamiento_id`),
   CONSTRAINT `entrenamiento_ejercicios_ibfk_1` FOREIGN KEY (`entrenamiento_id`) REFERENCES `entrenamientos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -136,7 +136,6 @@ DROP TABLE IF EXISTS `entrenamientos`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `entrenamientos` (
   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `dvh` varchar(64) NOT NULL DEFAULT '',
   `usuario_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `rutina_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `fecha` date NOT NULL,
@@ -147,6 +146,7 @@ CREATE TABLE `entrenamientos` (
   `observaciones` text,
   `usuario_en_curso` varchar(36) DEFAULT NULL,
   `distancia_km` decimal(6,2) DEFAULT NULL,
+  `dvh` char(64) GENERATED ALWAYS AS (SHA2(CAST(JSON_ARRAY(`dia_semana`, `distancia_km`, `estado`, `fecha_fin`, `fecha_inicio`, `fecha`, `id`, `observaciones`, `rutina_id`, `usuario_en_curso`, `usuario_id`) AS CHAR), 256)) VIRTUAL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `usuario_en_curso` (`usuario_en_curso`),
   KEY `usuario_id` (`usuario_id`),
@@ -161,7 +161,6 @@ DROP TABLE IF EXISTS `mediciones_fisicas`;
 CREATE TABLE `mediciones_fisicas` (
   `usuario_inicial` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `dvh` varchar(64) NOT NULL DEFAULT '',
   `usuario_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `peso_kg` decimal(5,2) NOT NULL,
   `altura_cm` decimal(5,2) DEFAULT NULL,
@@ -173,6 +172,7 @@ CREATE TABLE `mediciones_fisicas` (
   `pecho_cm` decimal(5,2) DEFAULT NULL,
   `brazos_cm` decimal(5,2) DEFAULT NULL,
   `piernas_cm` decimal(5,2) DEFAULT NULL,
+  `dvh` char(64) GENERATED ALWAYS AS (SHA2(CAST(JSON_ARRAY(`altura_cm`, `brazos_cm`, `cintura_cm`, `fecha_medicion`, `grasa_corporal`, `id`, `musculo_corporal`, `nivel_actividad`, `pecho_cm`, `peso_kg`, `piernas_cm`, `usuario_id`, `usuario_inicial`) AS CHAR), 256)) VIRTUAL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `usuario_inicial` (`usuario_inicial`),
   KEY `usuario_id` (`usuario_id`),
@@ -184,11 +184,11 @@ DROP TABLE IF EXISTS `mensajes`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `mensajes` (
   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `dvh` varchar(64) NOT NULL DEFAULT '',
   `conversacion_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `rol` enum('user','assistant') NOT NULL DEFAULT 'user',
   `contenido` text NOT NULL,
   `fecha_creacion` datetime(3) NOT NULL,
+  `dvh` char(64) GENERATED ALWAYS AS (SHA2(CAST(JSON_ARRAY(`contenido`, `conversacion_id`, `fecha_creacion`, `id`, `rol`) AS CHAR), 256)) VIRTUAL,
   PRIMARY KEY (`id`),
   KEY `conversacion_id` (`conversacion_id`),
   CONSTRAINT `mensajes_ibfk_1` FOREIGN KEY (`conversacion_id`) REFERENCES `conversaciones` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -199,7 +199,6 @@ DROP TABLE IF EXISTS `objetivos`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `objetivos` (
   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `dvh` varchar(64) NOT NULL DEFAULT '',
   `usuario_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `medicion_inicio_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   `nombre` varchar(100) NOT NULL,
@@ -217,6 +216,7 @@ CREATE TABLE `objetivos` (
   `fecha_cierre` datetime(3) DEFAULT NULL,
   `usuario_activo` varchar(36) DEFAULT NULL,
   `valor_inicial` decimal(8,2) DEFAULT NULL,
+  `dvh` char(64) GENERATED ALWAYS AS (SHA2(CAST(JSON_ARRAY(`actividad_objetivo`, `descripcion`, `estado`, `fecha_cierre`, `fecha_completado`, `fecha_fin_estimada`, `fecha_inicio`, `frecuencia_semanal`, `id`, `medicion_inicio_id`, `nombre`, `peso_inicial`, `tipo`, `unidad`, `usuario_activo`, `usuario_id`, `valor_inicial`, `valor_objetivo`) AS CHAR), 256)) VIRTUAL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `usuario_activo` (`usuario_activo`),
   KEY `usuario_id` (`usuario_id`),
@@ -244,12 +244,12 @@ DROP TABLE IF EXISTS `roles`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `roles` (
   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `dvh` varchar(64) NOT NULL DEFAULT '',
   `nombre` varchar(50) NOT NULL,
   `descripcion` varchar(255) DEFAULT NULL,
   `fecha_creacion` datetime(3) NOT NULL,
   `permisos` json NOT NULL,
   `sistema` tinyint(1) NOT NULL DEFAULT '0',
+  `dvh` char(64) GENERATED ALWAYS AS (SHA2(CAST(JSON_ARRAY(`descripcion`, `fecha_creacion`, `id`, `nombre`, `permisos`, `sistema`) AS CHAR), 256)) VIRTUAL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nombre` (`nombre`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -259,7 +259,6 @@ DROP TABLE IF EXISTS `rutina_ejercicios`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `rutina_ejercicios` (
   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `dvh` varchar(64) NOT NULL DEFAULT '',
   `rutina_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `ejercicio_id` varchar(40) DEFAULT NULL,
   `nombre_ejercicio` varchar(150) NOT NULL,
@@ -271,6 +270,7 @@ CREATE TABLE `rutina_ejercicios` (
   `peso_sugerido_kg` decimal(6,2) DEFAULT NULL,
   `descanso_segundos` int NOT NULL DEFAULT '90',
   `observaciones` text,
+  `dvh` char(64) GENERATED ALWAYS AS (SHA2(CAST(JSON_ARRAY(`descanso_segundos`, `dia_semana`, `ejercicio_id`, `grupo_muscular`, `id`, `nombre_ejercicio`, `observaciones`, `orden`, `peso_sugerido_kg`, `repeticiones`, `rutina_id`, `series`) AS CHAR), 256)) VIRTUAL,
   PRIMARY KEY (`id`),
   KEY `rutina_id` (`rutina_id`),
   CONSTRAINT `rutina_ejercicios_ibfk_1` FOREIGN KEY (`rutina_id`) REFERENCES `rutinas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -281,7 +281,6 @@ DROP TABLE IF EXISTS `rutinas`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `rutinas` (
   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `dvh` varchar(64) NOT NULL DEFAULT '',
   `usuario_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `objetivo_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   `nombre` varchar(100) NOT NULL,
@@ -290,6 +289,7 @@ CREATE TABLE `rutinas` (
   `estado` enum('activa','eliminada','finalizada') NOT NULL DEFAULT 'activa',
   `fecha_creacion` datetime(3) NOT NULL,
   `fecha_actualizacion` datetime(3) DEFAULT NULL,
+  `dvh` char(64) GENERATED ALWAYS AS (SHA2(CAST(JSON_ARRAY(`descripcion`, `estado`, `fecha_actualizacion`, `fecha_creacion`, `id`, `nombre`, `objetivo_id`, `tipo_generacion`, `usuario_id`) AS CHAR), 256)) VIRTUAL,
   PRIMARY KEY (`id`),
   KEY `usuario_id` (`usuario_id`),
   KEY `objetivo_id` (`objetivo_id`),
@@ -302,11 +302,11 @@ DROP TABLE IF EXISTS `sesiones`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sesiones` (
   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `dvh` varchar(64) NOT NULL DEFAULT '',
   `usuario_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `token_hash` varchar(64) NOT NULL,
   `fecha_creacion` datetime(3) NOT NULL,
   `fecha_expiracion` datetime(3) NOT NULL,
+  `dvh` char(64) GENERATED ALWAYS AS (SHA2(CAST(JSON_ARRAY(`fecha_creacion`, `fecha_expiracion`, `id`, `token_hash`, `usuario_id`) AS CHAR), 256)) VIRTUAL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `token_hash` (`token_hash`),
   KEY `usuario_id` (`usuario_id`),
@@ -318,10 +318,10 @@ DROP TABLE IF EXISTS `usuario_roles`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `usuario_roles` (
   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `dvh` varchar(64) NOT NULL DEFAULT '',
   `usuario_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `rol_id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `fecha_asignacion` datetime(3) NOT NULL,
+  `dvh` char(64) GENERATED ALWAYS AS (SHA2(CAST(JSON_ARRAY(`fecha_asignacion`, `id`, `rol_id`, `usuario_id`) AS CHAR), 256)) VIRTUAL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `usuario_roles_rol_id_usuario_id_unique` (`usuario_id`,`rol_id`),
   KEY `rol_id` (`rol_id`),
@@ -334,7 +334,6 @@ DROP TABLE IF EXISTS `usuarios`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `usuarios` (
   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `dvh` varchar(64) NOT NULL DEFAULT '',
   `nombre` varchar(100) NOT NULL,
   `apellido` varchar(100) DEFAULT NULL,
   `email` varchar(150) NOT NULL,
@@ -350,6 +349,7 @@ CREATE TABLE `usuarios` (
   `intentos_fallidos` int NOT NULL DEFAULT '0',
   `ultimo_intento_fallido` datetime(3) DEFAULT NULL,
   `bloqueado_hasta` datetime(3) DEFAULT NULL,
+  `dvh` char(64) GENERATED ALWAYS AS (SHA2(CAST(JSON_ARRAY(`apellido`, `bloqueado_hasta`, `consentimiento_ia`, `email`, `estado`, `fecha_nacimiento`, `fecha_registro`, `genero`, `id`, `intentos_fallidos`, `nombre`, `password_hash`, `telefono_cifrado`, `ultima_conexion`, `ultimo_intento_fallido`, `zona_horaria`) AS CHAR), 256)) VIRTUAL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -363,3 +363,36 @@ CREATE TABLE `usuarios` (
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+CREATE OR REPLACE VIEW digitos_verificadores AS
+SELECT 'bitacora' AS nombre_tabla, COUNT(*) AS filas, SHA2(CONCAT(COUNT(*), ':', HEX(BIT_XOR(CAST(UNHEX(dvh) AS BINARY(32))))), 256) AS dvv FROM `bitacora`
+UNION ALL
+SELECT 'comidas_consumidas' AS nombre_tabla, COUNT(*) AS filas, SHA2(CONCAT(COUNT(*), ':', HEX(BIT_XOR(CAST(UNHEX(dvh) AS BINARY(32))))), 256) AS dvv FROM `comidas_consumidas`
+UNION ALL
+SELECT 'conversaciones' AS nombre_tabla, COUNT(*) AS filas, SHA2(CONCAT(COUNT(*), ':', HEX(BIT_XOR(CAST(UNHEX(dvh) AS BINARY(32))))), 256) AS dvv FROM `conversaciones`
+UNION ALL
+SELECT 'dieta_comidas' AS nombre_tabla, COUNT(*) AS filas, SHA2(CONCAT(COUNT(*), ':', HEX(BIT_XOR(CAST(UNHEX(dvh) AS BINARY(32))))), 256) AS dvv FROM `dieta_comidas`
+UNION ALL
+SELECT 'dietas' AS nombre_tabla, COUNT(*) AS filas, SHA2(CONCAT(COUNT(*), ':', HEX(BIT_XOR(CAST(UNHEX(dvh) AS BINARY(32))))), 256) AS dvv FROM `dietas`
+UNION ALL
+SELECT 'entrenamiento_ejercicios' AS nombre_tabla, COUNT(*) AS filas, SHA2(CONCAT(COUNT(*), ':', HEX(BIT_XOR(CAST(UNHEX(dvh) AS BINARY(32))))), 256) AS dvv FROM `entrenamiento_ejercicios`
+UNION ALL
+SELECT 'entrenamientos' AS nombre_tabla, COUNT(*) AS filas, SHA2(CONCAT(COUNT(*), ':', HEX(BIT_XOR(CAST(UNHEX(dvh) AS BINARY(32))))), 256) AS dvv FROM `entrenamientos`
+UNION ALL
+SELECT 'mediciones_fisicas' AS nombre_tabla, COUNT(*) AS filas, SHA2(CONCAT(COUNT(*), ':', HEX(BIT_XOR(CAST(UNHEX(dvh) AS BINARY(32))))), 256) AS dvv FROM `mediciones_fisicas`
+UNION ALL
+SELECT 'mensajes' AS nombre_tabla, COUNT(*) AS filas, SHA2(CONCAT(COUNT(*), ':', HEX(BIT_XOR(CAST(UNHEX(dvh) AS BINARY(32))))), 256) AS dvv FROM `mensajes`
+UNION ALL
+SELECT 'objetivos' AS nombre_tabla, COUNT(*) AS filas, SHA2(CONCAT(COUNT(*), ':', HEX(BIT_XOR(CAST(UNHEX(dvh) AS BINARY(32))))), 256) AS dvv FROM `objetivos`
+UNION ALL
+SELECT 'roles' AS nombre_tabla, COUNT(*) AS filas, SHA2(CONCAT(COUNT(*), ':', HEX(BIT_XOR(CAST(UNHEX(dvh) AS BINARY(32))))), 256) AS dvv FROM `roles`
+UNION ALL
+SELECT 'rutina_ejercicios' AS nombre_tabla, COUNT(*) AS filas, SHA2(CONCAT(COUNT(*), ':', HEX(BIT_XOR(CAST(UNHEX(dvh) AS BINARY(32))))), 256) AS dvv FROM `rutina_ejercicios`
+UNION ALL
+SELECT 'rutinas' AS nombre_tabla, COUNT(*) AS filas, SHA2(CONCAT(COUNT(*), ':', HEX(BIT_XOR(CAST(UNHEX(dvh) AS BINARY(32))))), 256) AS dvv FROM `rutinas`
+UNION ALL
+SELECT 'sesiones' AS nombre_tabla, COUNT(*) AS filas, SHA2(CONCAT(COUNT(*), ':', HEX(BIT_XOR(CAST(UNHEX(dvh) AS BINARY(32))))), 256) AS dvv FROM `sesiones`
+UNION ALL
+SELECT 'usuario_roles' AS nombre_tabla, COUNT(*) AS filas, SHA2(CONCAT(COUNT(*), ':', HEX(BIT_XOR(CAST(UNHEX(dvh) AS BINARY(32))))), 256) AS dvv FROM `usuario_roles`
+UNION ALL
+SELECT 'usuarios' AS nombre_tabla, COUNT(*) AS filas, SHA2(CONCAT(COUNT(*), ':', HEX(BIT_XOR(CAST(UNHEX(dvh) AS BINARY(32))))), 256) AS dvv FROM `usuarios`;

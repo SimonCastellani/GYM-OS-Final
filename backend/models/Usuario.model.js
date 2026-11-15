@@ -10,7 +10,6 @@ const Usuario = sequelize.define(
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    dvh: { type: DataTypes.STRING(64), allowNull: false, defaultValue: "" },
     nombre: { type: DataTypes.STRING(100), allowNull: false },
     apellido: { type: DataTypes.STRING(100), allowNull: true },
     email: { type: DataTypes.STRING(150), allowNull: false, unique: true },

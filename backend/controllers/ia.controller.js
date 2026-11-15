@@ -1,3 +1,4 @@
+const { registrarEvento } = require("./bitacora.controller");
 const { sequelize } = require("../config/db");
 const {
   Usuario,
@@ -146,6 +147,9 @@ async function generarRutinaIA(req, res) {
       order: [["fecha_inicio", "DESC"]],
       limit: 5,
     });
+    if (rutina && !historiales.length) {
+      return res.status(409).json({ message: "Registrá un entrenamiento completo antes de adaptar la rutina con IA." });
+    }
     const contexto = {
       peso_kg: medicion.peso_kg,
       altura_cm: medicion.altura_cm,
@@ -385,6 +389,7 @@ async function responderConsulta(req, res) {
           transaction,
         },
       );
+      await registrarEvento(req.user.id, "CU031_CONSULTAR_BOT", "asistente", transaction);
       await transaction.commit();
     } catch (errorGuardado) {
       await transaction.rollback();

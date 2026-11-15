@@ -10,7 +10,6 @@ const ComidaConsumida = sequelize.define(
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    dvh: { type: DataTypes.STRING(64), allowNull: false, defaultValue: "" },
     usuario_id: { type: DataTypes.UUID, allowNull: false },
     nombre_comida: { type: DataTypes.STRING(150), allowNull: false },
     tipo_comida: { type: DataTypes.STRING(50), allowNull: true },

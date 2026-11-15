@@ -8,6 +8,7 @@ async function inicializar() {
   await sequelize.authenticate();
   await sequelize.sync();
   await require("./actualizar-login").actualizarProteccionLogin();
+  await require("./instalar-integridad").instalarIntegridad();
   const [rol] = await Rol.findOrCreate({
     where: { nombre: "Cliente" },
     defaults: {
