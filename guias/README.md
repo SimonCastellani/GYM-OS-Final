@@ -12,7 +12,7 @@ La principal incorporación del 90 % al 100 % es la gestión de roles personaliz
 | [Paulo López Stanley](04-paulo-lopez.md) | Formulario de roles y edición de dietas |
 | [Gade Silva y Lápiz](05-gade-silva-y-lapiz.md) | Asignación de roles y alta de comidas sin duplicados |
 | [Valentín Sued (Sueco)](06-valentin-sued.md) | Bajas protegidas y bitácora de rutinas manuales |
-| [Mateo Romani](07-mateo-romani.md) | Progreso, auditoría e integridad de los datos |
+| [Mateo Romani](07-mateo-romani.md) | Comparación de peso inicial y actual, y dígitos verificadores |
 | [Joaquín Casanou](08-joaquin-casanou.md) | Consulta de roles y validación previa a adaptar planes |
 | [Simón Castellani](09-simon-castellani.md) | Crear y modificar roles, y editar consumos con control de duplicados |
 
@@ -42,14 +42,14 @@ La base inicial se identificó por el alcance de cuentas y el reparto de `Proyec
 | `PUT /api/admin/usuarios/:id/roles` | Gade | Reemplazar asignaciones y cerrar sesiones del usuario afectado. |
 | `DELETE /api/admin/roles/:id` | Valentín | Rechazar bajas de roles asignados o protegidos y borrar un rol libre. |
 
-Paulo explica el formulario React de alta y edición, y Mateo sigue la evidencia en bitácora. [Rutas en el código final](https://github.com/SimonCastellani/GYM-OS-Final/blob/67cba939d9363d6c3b3eb9b4726249f61e1b64ff/backend/routes/admin.routes.js#L32)
+Paulo explica el formulario React de alta y edición. [Rutas en el código final](https://github.com/SimonCastellani/GYM-OS-Final/blob/67cba939d9363d6c3b3eb9b4726249f61e1b64ff/backend/routes/admin.routes.js#L32)
 
 ## Cómo ensayar juntos
 
 1. **Gianluca** verifica que esté corriendo la versión final y muestra un cierre de sesión. Dejen abiertas una cuenta administradora y una cuenta común de prueba en perfiles de navegador separados.
 2. **Joaquín** muestra la consulta de roles. **Paulo** abre el formulario. **Simón** crea y edita un rol de prueba. **Gade** lo asigna a la cuenta común. **Valentín** intenta borrarlo mientras está asignado y después de quitar esa asignación.
 3. **Iván** muestra el filtro por fecha y cierra una sesión de entrenamiento. **Tomás** explica el chat o la generación de un plan nuevo. **Joaquín** muestra el requisito del historial para adaptar una rutina.
-4. **Gade y Simón** prueban un consumo duplicado en alta y edición. **Mateo** cierra con el progreso, la bitácora y una consulta del DVV.
+4. **Gade y Simón** prueban un consumo duplicado en alta y edición. **Mateo** cierra con la comparación de peso inicial y actual y una consulta del DVV.
 
 Cada persona prepara un caso correcto, uno que se rechaza o se cancela y una explicación breve de pantalla → ruta → función → datos. Usen cuentas y registros de prueba. Para IA hace falta Cohere configurado y consentimiento; para recuperación usen el buzón local. Cada integrante registra lo que efectivamente comprobó.
 
