@@ -24,7 +24,7 @@ La recuperación, los cinco intentos y el bloqueo de 15 minutos ya estaban en el
 ## Cómo mostrarlo
 
 1. Entrá con una cuenta de prueba y cancelá el cierre de sesión. Mostrá que seguís teniendo acceso a Mi cuenta.
-2. Confirmá el cierre y comprobá que una ruta privada devuelve 401 si se reusa esa sesión. Pedile a Mateo que muestre `CU003_LOGOUT` en el panel de bitácora.
+2. Confirmá el cierre y comprobá que una ruta privada devuelve 401 si se reusa esa sesión. Mostrá `CU003_LOGOUT` en el panel de bitácora.
 3. Con Mailpit configurado, solicitá un enlace para la cuenta de prueba, restablecé la contraseña e intentá reutilizarlo. Debería fallar y quedar un solo evento de restablecimiento exitoso.
 
 ## Preguntas que te pueden hacer

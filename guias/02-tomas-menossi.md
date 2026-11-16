@@ -23,7 +23,7 @@ El modo Soporte se actualizó para conocer la gestión de usuarios y roles. Su l
 
 ## Cómo mostrarlo
 
-1. Con una cuenta que dio consentimiento y Cohere configurado, preguntá en modo Soporte dónde se administran los roles. Mostrá conversación y bitácora con ayuda de Mateo.
+1. Con una cuenta que dio consentimiento y Cohere configurado, preguntá en modo Soporte dónde se administran los roles. Mostrá la conversación y el evento en bitácora con una cuenta autorizada.
 2. Desactivá el consentimiento en Mi cuenta y comprobá que el envío se rechaza antes de llegar al proveedor.
 3. Con medidas y objetivo activo, generá un plan nuevo. Explicá en qué punto se registra el evento. Coordiná con Joaquín para que su parte empiece con un plan ya existente.
 

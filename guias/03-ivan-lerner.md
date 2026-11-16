@@ -24,7 +24,7 @@ Los entrenamientos y la creación manual de dietas ya estaban en el 90 %. Enfoca
 ## Cómo mostrarlo
 
 1. Prepará dos entrenamientos cerrados en fechas diferentes. Elegí una fecha, otra sin resultados y luego Ver todas las fechas.
-2. Guardá un entrenamiento todavía iniciado y después cerralo con confirmación. Verificá con Mateo que el evento aparece al cerrar.
+2. Guardá un entrenamiento todavía iniciado y después cerralo con confirmación. Verificá en bitácora que el evento aparece al cerrar.
 3. Creá una dieta manual de ejemplo y comprobá en la bitácora el alta exitosa. Dejá esa dieta disponible para que Paulo muestre su edición.
 
 ## Preguntas que te pueden hacer

@@ -25,7 +25,7 @@ El caso fuerte es explicar qué datos nuevos se consultan o exigen antes de usar
 
 1. Abrí Roles y permisos como administrador. Mostrá el GET y compará la respuesta con una cuenta sin el permiso, que recibe 403.
 2. Prepará una cuenta con consentimiento, medidas, objetivo activo y rutina propia, pero sin sesiones completas. Pedí adaptar y mostrá el 409.
-3. Completá un entrenamiento con Iván y repetí, si está disponible Cohere con una clave de prueba. Mostrá que se mantiene el id y coordiná con Mateo para verificar el evento.
+3. Completá un entrenamiento con Iván y repetí, si está disponible Cohere con una clave de prueba. Mostrá que se mantiene el id y verificá el evento en bitácora.
 
 ## Preguntas que te pueden hacer
 

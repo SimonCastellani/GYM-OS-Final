@@ -24,7 +24,7 @@ Defendé el recorrido completo desde la ruta al controlador y al modelo. Paulo e
 ## Cómo mostrarlo
 
 1. Creá desde Administración un rol `Lectura de prueba` con `usuarios:ver`. Mostrá la respuesta y dejalo preparado para el ensayo de Gade.
-2. Editá el nombre o permisos y confirmá que el id sigue igual. Probá crear otro con el mismo nombre, o editar Cliente, y explicá el 409. Coordiná con Mateo para ver ambos eventos exitosos.
+2. Editá el nombre o permisos y confirmá que el id sigue igual. Probá crear otro con el mismo nombre, o editar Cliente, y explicá el 409. Consultá ambos eventos exitosos en bitácora.
 3. Editá un consumo guardado y comprobá que conserva el id. Después intentá llevarlo a los mismos datos y horario de otro consumo de la cuenta y mostrale al grupo por qué se rechaza.
 
 ## Preguntas que te pueden hacer

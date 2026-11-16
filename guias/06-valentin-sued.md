@@ -24,7 +24,7 @@ Te toca explicar qué baja cada operación, qué conserva y cuándo se vuelve vi
 ## Cómo mostrarlo
 
 1. Con el rol que Gade asignó a una cuenta de prueba, intentá borrarlo y mostrá el rechazo. Pedile que lo reemplace por Cliente y repetí la baja. Verificá que el rol desaparece.
-2. Creá o editá una rutina de prueba y después confirmá su baja. Mostrá en bitácora los eventos con ayuda de Mateo.
+2. Creá o editá una rutina de prueba y después confirmá su baja. Mostrá en bitácora los eventos con una cuenta autorizada.
 3. Cancelá una baja de dieta y comprobá que siga listada. Después confirmala y revisá el evento.
 
 ## Preguntas que te pueden hacer
