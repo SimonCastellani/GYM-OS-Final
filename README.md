@@ -64,4 +64,4 @@ Para crear un administrador, completar `ADMIN_EMAIL` y `ADMIN_PASSWORD` en `.env
 
 ## Guías para la defensa final
 
-[Abrir el reparto y las nueve guías de estudio](docs/guias-defensa-final/README.md). Cada guía incluye los cambios del 90 % al 100 %, enlaces al código, pasos para la demostración y preguntas de práctica.
+[Abrir el reparto y las nueve guías de estudio](guias/README.md). Cada guía incluye los cambios del 90 % al 100 %, enlaces al código, pasos para la demostración y preguntas de práctica.
