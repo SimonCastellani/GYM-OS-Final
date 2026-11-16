@@ -61,3 +61,7 @@ APP_URL=http://localhost:5176
 Los correos de prueba se consultan en http://localhost:8026; no se envían a casillas reales.
 
 Para crear un administrador, completar `ADMIN_EMAIL` y `ADMIN_PASSWORD` en `.env` y ejecutar `npm run admin:crear`.
+
+## Guías para la defensa final
+
+[Abrir el reparto y las nueve guías de estudio](docs/guias-defensa-final/README.md). Cada guía incluye los cambios del 90 % al 100 %, enlaces al código, pasos para la demostración y preguntas de práctica.
