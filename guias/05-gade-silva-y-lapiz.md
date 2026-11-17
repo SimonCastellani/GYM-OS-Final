@@ -13,7 +13,7 @@
 
 ## Qué cambió del 90 % al 100 %
 
-La asignación retoma el registro con roles y el cierre de sesiones que ya explicabas al bloquear cuentas. El control nuevo se aplica al módulo de consumos que ya defendías. Simón explica la edición de consumos.
+La asignación retoma el registro con roles y el cierre de sesiones que ya explicabas al bloquear cuentas. El control nuevo se aplica al módulo de consumos que ya defendías.
 
 | Ruta o pantalla | Función o archivo | Qué explicar |
 |---|---|---|

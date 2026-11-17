@@ -14,7 +14,7 @@ La principal incorporación del 90 % al 100 % es la gestión de roles personaliz
 | [Valentín Sued (Sueco)](06-valentin-sued.md) | Bajas protegidas y bitácora de rutinas manuales |
 | [Mateo Romani](07-mateo-romani.md) | Comparación de peso inicial y actual, y dígitos verificadores |
 | [Joaquín Casanou](08-joaquin-casanou.md) | Consulta de roles y validación previa a adaptar planes |
-| [Simón Castellani](09-simon-castellani.md) | Crear y modificar roles, y editar consumos con control de duplicados |
+| [Simón Castellani](09-simon-castellani.md) | Creación y edición de roles personalizados en el servidor |
 
 ## Continuidad de las cuatro preentregas
 
@@ -49,7 +49,7 @@ Paulo explica el formulario React de alta y edición. [Rutas en el código final
 1. **Gianluca** verifica que esté corriendo la versión final y muestra un cierre de sesión. Dejen abiertas una cuenta administradora y una cuenta común de prueba en perfiles de navegador separados.
 2. **Joaquín** muestra la consulta de roles. **Paulo** abre el formulario. **Simón** crea y edita un rol de prueba. **Gade** lo asigna a la cuenta común. **Valentín** intenta borrarlo mientras está asignado y después de quitar esa asignación.
 3. **Iván** muestra el filtro por fecha y cierra una sesión de entrenamiento. **Tomás** explica el chat o la generación de un plan nuevo. **Joaquín** muestra el requisito del historial para adaptar una rutina.
-4. **Gade y Simón** prueban un consumo duplicado en alta y edición. **Mateo** cierra con la comparación de peso inicial y actual y una consulta del DVV.
+4. **Gade** prueba el rechazo de un consumo duplicado al darlo de alta. **Mateo** cierra con la comparación de peso inicial y actual y una consulta del DVV.
 
 Cada persona prepara un caso correcto, uno que se rechaza o se cancela y una explicación breve de pantalla → ruta → función → datos. Usen cuentas y registros de prueba. Para IA hace falta Cohere configurado y consentimiento; para recuperación usen el buzón local. Cada integrante registra lo que efectivamente comprobó.
 
